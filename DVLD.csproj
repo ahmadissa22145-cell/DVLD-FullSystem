@@ -532,12 +532,6 @@
     <None Include="Resources\Close 32.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DVLD_Buisness\DVLD Business.csproj">
-      <Project>{46a8427b-dcfc-4daf-a14c-e3f4789a993d}</Project>
-      <Name>DVLD Business</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\Man 32.png" />
   </ItemGroup>
   <ItemGroup>
@@ -798,6 +792,11 @@
   <ItemGroup>
     <None Include="Resources\Release Detained License 512.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="DVLD_Buisness\DVLD Business.csproj">
+      <Project>{46a8427b-dcfc-4daf-a14c-e3f4789a993d}</Project>
+      <Name>DVLD Business</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
