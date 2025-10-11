@@ -6,26 +6,59 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Win32;
+using System.Runtime.CompilerServices;
 
 namespace DVLD.Global_Classes
 {
-    /*
-    *1 Global static clsUser Proparties to use this in system
-    *2 declear method to get stored data 
-    *3 declear method to save credintial user data in file 
-    */
+
     internal static class clsGlobal
     {
         internal static clsUser CurrentUserInfo { get; set; }
 
         private readonly static  string _directoryProjectPath = System.IO.Directory.GetCurrentDirectory();
         private readonly static string _fileSaveCredentialsPath = Path.Combine(_directoryProjectPath, "data.txt");
+        private const string KeyPath = @"HKEY_CURRENT_USER\Software\DVLD";
+        private const string UsernameValueName = "Username";
+        private const string PasswordValueName = "Password";
+        private const string Separator = "#//#";
 
+        // Save credentials as plain text with Separator and return boolean
+        internal static bool RememberUsernameAndPasswordInsideRegistry(string username, string password)
+        {
+            bool isRemembered = false;
 
-        // Save credentials as plain text with separator and return boolean
+            if (username == null)
+            {
+
+            }
+
+            try
+            {
+
+                using (RegistryKey key = Registry.CurrentUser.CreateSubKey(KeyPath))
+                {
+                    if(key == null) return false;
+
+                    key.SetValue(UsernameValueName, username);
+                    key.SetValue(PasswordValueName, password);
+                }
+
+                isRemembered = true;
+            }
+            catch (Exception ex)
+            {
+                //  Console.WriteLine(ex.Message);
+                isRemembered = false;
+            }
+
+            return isRemembered;
+        }
+
+        [Obsolete("This Is Old Way")]
         internal static bool RememberUsernameAndPassword(string username, string password)
         {
-            string separator = "#//#";
+            string Separator = "#//#";
 
             try
             {
@@ -40,7 +73,7 @@ namespace DVLD.Global_Classes
                     return true;
                 }
 
-                string dataToSave = username + separator + password;
+                string dataToSave = username + Separator + password;
 
                 using (StreamWriter writer = new StreamWriter(_fileSaveCredentialsPath))
                 {
@@ -58,6 +91,34 @@ namespace DVLD.Global_Classes
 
 
         // to read stored data in file and return username and password
+
+        internal static bool GetStoredCredentialsDataFromRegistry(ref string username, ref string password)
+        {
+            bool isObtained = false;
+
+            try
+            {
+                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(KeyPath))
+                {
+                    if (key == null) return false;
+
+                    username = key.GetValue(UsernameValueName, null) as string;
+                    password = key.GetValue(PasswordValueName, null) as string;
+                }
+
+
+                isObtained = !string.IsNullOrEmpty(username) & !string.IsNullOrEmpty(password);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                isObtained = false;
+            }
+
+            return isObtained;
+        }
+
+        [Obsolete("This Is Old Way")]
         internal static bool GetStoredCredentialsData(ref string username, ref string password)
         {
 

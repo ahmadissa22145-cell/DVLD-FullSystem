@@ -34,7 +34,7 @@ namespace DVLD.LogIn
 
             clsUser user = clsUser.FindByUsernameAndPassword(username, password);
 
-            if (user == null)
+            if (user == null) 
             {
                 MessageBox.Show("please check username or password and try again", "Wrong Credintials", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -42,11 +42,11 @@ namespace DVLD.LogIn
 
             if (chkRememberMe.Checked)
             {
-                clsGlobal.RememberUsernameAndPassword(username, password);
+                clsGlobal.RememberUsernameAndPasswordInsideRegistry(username, password);
             }
             else
             {
-                clsGlobal.RememberUsernameAndPassword(string.Empty, string.Empty);
+                clsGlobal.RememberUsernameAndPasswordInsideRegistry(string.Empty, string.Empty);
             }
 
             if (!user.IsActive)
@@ -67,7 +67,7 @@ namespace DVLD.LogIn
         {
             string username = string.Empty , password = string.Empty;
 
-            if (clsGlobal.GetStoredCredentialsData(ref username, ref password))
+            if (clsGlobal.GetStoredCredentialsDataFromRegistry(ref username, ref password))
             {
                 txtUserName.Text = username;
                 txtPassword.Text = password;
