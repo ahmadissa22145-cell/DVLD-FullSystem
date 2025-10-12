@@ -1,13 +1,9 @@
 ﻿using DVLD_Business;
+using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.Win32;
-using System.Runtime.CompilerServices;
 
 namespace DVLD.Global_Classes
 {
@@ -16,21 +12,56 @@ namespace DVLD.Global_Classes
     {
         internal static clsUser CurrentUserInfo { get; set; }
 
-        private readonly static  string _directoryProjectPath = System.IO.Directory.GetCurrentDirectory();
+        private readonly static string _directoryProjectPath = System.IO.Directory.GetCurrentDirectory();
         private readonly static string _fileSaveCredentialsPath = Path.Combine(_directoryProjectPath, "data.txt");
-        private const string KeyPath = @"HKEY_CURRENT_USER\Software\DVLD";
+        private const string KeyPath = @"Software\DVLD";
         private const string UsernameValueName = "Username";
         private const string PasswordValueName = "Password";
         private const string Separator = "#//#";
+
+        private static bool DeleteCredentials()
+        {
+            bool isDeleted = false;
+            try
+            {
+                using (RegistryKey baseKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64))
+                {
+                    using (RegistryKey key = baseKey.OpenSubKey(KeyPath, true))
+                    {
+                        if (key == null)
+                        {
+                            MessageBox.Show($@"Registry key with path {KeyPath} not found");
+                        }
+
+                        bool valueExist = key.GetValueNames().Contains(UsernameValueName) && key.GetValueNames().Contains(PasswordValueName);
+
+                        if (valueExist)
+                        {
+                            key.DeleteValue(UsernameValueName, false);
+                            key.DeleteValue(PasswordValueName, false);
+                        }
+
+                        isDeleted = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                isDeleted = false;
+            }
+
+            return isDeleted;
+        }
 
         // Save credentials as plain text with Separator and return boolean
         internal static bool RememberUsernameAndPasswordInsideRegistry(string username, string password)
         {
             bool isRemembered = false;
 
-            if (username == null)
+            if (string.IsNullOrEmpty(username))
             {
-
+                return DeleteCredentials();
             }
 
             try
@@ -38,7 +69,7 @@ namespace DVLD.Global_Classes
 
                 using (RegistryKey key = Registry.CurrentUser.CreateSubKey(KeyPath))
                 {
-                    if(key == null) return false;
+                    if (key == null) return false;
 
                     key.SetValue(UsernameValueName, username);
                     key.SetValue(PasswordValueName, password);
@@ -63,11 +94,11 @@ namespace DVLD.Global_Classes
             try
             {
 
-                if(username == string.Empty)
+                if (username == string.Empty)
                 {
                     if (File.Exists(_fileSaveCredentialsPath))
                     {
-                        File.Delete(_fileSaveCredentialsPath);  
+                        File.Delete(_fileSaveCredentialsPath);
                     }
 
                     return true;
@@ -78,7 +109,7 @@ namespace DVLD.Global_Classes
                 using (StreamWriter writer = new StreamWriter(_fileSaveCredentialsPath))
                 {
                     writer.WriteLine(dataToSave);
-                    
+
                 }
                 return true;
             }

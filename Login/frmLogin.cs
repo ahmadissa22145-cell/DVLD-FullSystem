@@ -60,6 +60,12 @@ namespace DVLD.LogIn
             this.Hide();
             frmMain Main = new frmMain(this);
             Main.ShowDialog();
+
+            if (!chkRememberMe.Checked)
+            {
+                txtUserName.Text = string.Empty;
+                txtPassword.Text = string.Empty;
+            }
         }
 
 
@@ -75,6 +81,9 @@ namespace DVLD.LogIn
             }
             else
             {
+
+                txtUserName.Text = string.Empty;
+                txtPassword.Text = string.Empty;
                 chkRememberMe.Checked = false;
             }
         }
