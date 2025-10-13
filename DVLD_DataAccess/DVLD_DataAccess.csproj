@@ -60,7 +60,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Shared\DVLD_Shared.csproj">
+    <ProjectReference Include="..\DVLD_Shared\DVLD_Shared.csproj">
       <Project>{daab0c33-6a4c-4080-8961-1455695d610b}</Project>
       <Name>DVLD_Shared</Name>
     </ProjectReference>

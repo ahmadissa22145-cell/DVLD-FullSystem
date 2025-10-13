@@ -59,13 +59,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Shared\DVLD_Shared.csproj">
-      <Project>{daab0c33-6a4c-4080-8961-1455695d610b}</Project>
-      <Name>DVLD_Shared</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DVLD_DataAccess\DVLD_DataAccess.csproj">
       <Project>{c1be28ad-d036-4c77-964c-9ee4acc6727a}</Project>
       <Name>DVLD_DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DVLD_Shared\DVLD_Shared.csproj">
+      <Project>{daab0c33-6a4c-4080-8961-1455695d610b}</Project>
+      <Name>DVLD_Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
