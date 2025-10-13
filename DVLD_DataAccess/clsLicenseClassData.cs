@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DVLD_Shared;
+using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace DVLD_DataAccess
 {
@@ -33,18 +31,18 @@ namespace DVLD_DataAccess
                 {
                     isFound = true;
 
-                    className             = Convert.ToString(reader["ClassName"]);
-                    classDescription      = Convert.ToString(reader["ClassDescription"]);
-                    minimumAllowedAge     = Convert.ToInt32(reader["MinimumAllowedAge"]);
+                    className = Convert.ToString(reader["ClassName"]);
+                    classDescription = Convert.ToString(reader["ClassDescription"]);
+                    minimumAllowedAge = Convert.ToInt32(reader["MinimumAllowedAge"]);
                     defaultValidityLength = Convert.ToInt32(reader["DefaultValidityLength"]);
-                    classFees             = Convert.ToSingle(reader["ClassFees"]);
+                    classFees = Convert.ToSingle(reader["ClassFees"]);
                 }
 
                 reader.Close();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 isFound = false;
             }
             finally
@@ -78,18 +76,18 @@ namespace DVLD_DataAccess
                 {
                     isFound = true;
 
-                    licenseClassID        = Convert.ToInt32(reader["licenseClassID"]);
-                    classDescription      = Convert.ToString(reader["ClassDescription"]);
-                    minimumAllowedAge     = Convert.ToInt32(reader["MinimumAllowedAge"]);
+                    licenseClassID = Convert.ToInt32(reader["licenseClassID"]);
+                    classDescription = Convert.ToString(reader["ClassDescription"]);
+                    minimumAllowedAge = Convert.ToInt32(reader["MinimumAllowedAge"]);
                     defaultValidityLength = Convert.ToInt32(reader["DefaultValidityLength"]);
-                    classFees             = Convert.ToSingle(reader["ClassFees"]);
+                    classFees = Convert.ToSingle(reader["ClassFees"]);
                 }
 
                 reader.Close();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 isFound = false;
             }
             finally
@@ -124,7 +122,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 return -1;
             }
             finally
@@ -160,7 +158,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
             }
             finally
             {
@@ -208,7 +206,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 licenseClassID = -1;
             }
             finally
@@ -248,11 +246,11 @@ namespace DVLD_DataAccess
             {
                 connection.Open();
 
-                 rowsAffected = command.ExecuteNonQuery();
+                rowsAffected = command.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 rowsAffected = 0;
             }
             finally

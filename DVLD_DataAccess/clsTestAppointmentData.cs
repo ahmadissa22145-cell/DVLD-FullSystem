@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DVLD_Shared;
+using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace DVLD_DataAccess
 {
@@ -26,7 +24,7 @@ namespace DVLD_DataAccess
             SqlCommand command = new SqlCommand(query, connection);
 
             command.Parameters.AddWithValue("@TestAppointmentID", testAppointmentID);
-  
+
             try
             {
                 connection.Open();
@@ -52,7 +50,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
 
                 return false;
             }
@@ -107,7 +105,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
 
                 return false;
             }
@@ -164,7 +162,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 return -1;
             }
             finally
@@ -180,7 +178,7 @@ namespace DVLD_DataAccess
                                                 bool isLocked, int retakeTestApplicationID)
         {
             int rowsAffected = 0;
-            
+
             SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
 
             string query = @"
@@ -221,7 +219,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
 
                 return false;
             }
@@ -254,8 +252,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-               // Console.WriteLine(ex.ToString());
-
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 return false;
             }
             finally
@@ -289,11 +286,11 @@ namespace DVLD_DataAccess
                     dtTestAppointments.Load(reader);
                 }
 
-                reader.Close(); 
+                reader.Close();
             }
             catch (Exception ex)
             {
-                // Console.WriteLine(ex.ToString());
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
             }
             finally
             {
@@ -334,7 +331,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                // Console.WriteLine(ex.ToString());
+                 clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
             }
             finally
             {
@@ -367,7 +364,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                // Console.WriteLine(ex.ToString());
+                 clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
 
                 return -1;
             }
@@ -407,8 +404,7 @@ namespace DVLD_DataAccess
 
             catch (Exception ex)
             {
-                //Console.WriteLine("Error: " + ex.Message);
-
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
             }
 
             finally

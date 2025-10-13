@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DVLD_Shared;
+using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace DVLD_DataAccess
 {
@@ -12,7 +10,7 @@ namespace DVLD_DataAccess
     {
 
         public static bool GetTestInfoByID(int testID, ref int testAppointmentID, ref bool testResult,
-                                           ref string notes, ref int createdByUserID )
+                                           ref string notes, ref int createdByUserID)
         {
             bool isFound = false;
             SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
@@ -45,7 +43,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                //Console.WriteLine(ex.ToString());
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 isFound = false;
             }
             finally
@@ -103,7 +101,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                //Console.WriteLine(ex.ToString());
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 isFound = false;
             }
             finally
@@ -138,7 +136,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                //Console.WriteLine(ex.ToString());
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
             }
             finally
             {
@@ -189,8 +187,8 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                //Console.WriteLine(ex.ToString());
-                testID = -1; 
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
+                testID = -1;
             }
             finally
             {
@@ -235,7 +233,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                //Console.WriteLine(ex.ToString());
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 rowsAffected = 0;
             }
             finally

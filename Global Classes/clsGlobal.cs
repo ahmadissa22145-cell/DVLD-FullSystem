@@ -1,9 +1,11 @@
 ﻿using DVLD_Business;
 using Microsoft.Win32;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
+using DVLD_Shared;
+using System.Diagnostics;
 
 namespace DVLD.Global_Classes
 {
@@ -14,33 +16,27 @@ namespace DVLD.Global_Classes
 
         private readonly static string _directoryProjectPath = System.IO.Directory.GetCurrentDirectory();
         private readonly static string _fileSaveCredentialsPath = Path.Combine(_directoryProjectPath, "data.txt");
-        private const string KeyPath = @"Software\DVLD";
+        public static string source = "DVLD";
+        private static string KeyPath = @"Software\DVLD";
+
         private const string UsernameValueName = "Username";
         private const string PasswordValueName = "Password";
-        private const string Separator = "#//#";
 
         private static bool DeleteCredentials()
         {
             bool isDeleted = false;
+
             try
             {
-                using (RegistryKey baseKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64))
+                using (RegistryKey key = Registry.CurrentUser.CreateSubKey(KeyPath))
                 {
-                    using (RegistryKey key = baseKey.OpenSubKey(KeyPath, true))
+
+                    bool valueExist = key.GetValueNames().Contains(UsernameValueName) && key.GetValueNames().Contains(PasswordValueName);
+
+                    if (valueExist)
                     {
-                        if (key == null)
-                        {
-                            MessageBox.Show($@"Registry key with path {KeyPath} not found");
-                        }
-
-                        bool valueExist = key.GetValueNames().Contains(UsernameValueName) && key.GetValueNames().Contains(PasswordValueName);
-
-                        if (valueExist)
-                        {
-                            key.DeleteValue(UsernameValueName, false);
-                            key.DeleteValue(PasswordValueName, false);
-                        }
-
+                        key.DeleteValue(UsernameValueName, false);
+                        key.DeleteValue(PasswordValueName, false);
                         isDeleted = true;
                     }
                 }
@@ -67,19 +63,14 @@ namespace DVLD.Global_Classes
             try
             {
 
-                using (RegistryKey key = Registry.CurrentUser.CreateSubKey(KeyPath))
-                {
-                    if (key == null) return false;
-
-                    key.SetValue(UsernameValueName, username);
-                    key.SetValue(PasswordValueName, password);
-                }
+                clsLogger.SaveValueIntoCurrentUserRegistry(source, UsernameValueName, username, kind: RegistryValueKind.String);
+                clsLogger.SaveValueIntoCurrentUserRegistry(source, PasswordValueName, password, kind: RegistryValueKind.String);
 
                 isRemembered = true;
             }
             catch (Exception ex)
             {
-                //  Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(source, ex.Message, EventLogEntryType.Error);
                 isRemembered = false;
             }
 
@@ -142,7 +133,7 @@ namespace DVLD.Global_Classes
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(source, ex.Message, EventLogEntryType.Error);
                 isObtained = false;
             }
 

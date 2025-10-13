@@ -5,6 +5,8 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DVLD_Shared;
+using System.Diagnostics;
 
 namespace DVLD_DataAccess
 {
@@ -44,7 +46,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 isFound = false;
             }
             finally
@@ -80,7 +82,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
             }
             finally
             {
@@ -122,7 +124,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 return false;
             }
             finally

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DVLD_Shared;
+using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
+using System.Diagnostics;
 
 namespace DVLD_DataAccess
 {
@@ -14,7 +10,7 @@ namespace DVLD_DataAccess
     {
 
 
-        public static bool FindByLocalDrivingLicenseApplicationID(int localDrivingLicenseApplicationID, 
+        public static bool FindByLocalDrivingLicenseApplicationID(int localDrivingLicenseApplicationID,
                                                                   ref int applicationID, ref int licenseClassID)
         {
             bool isFound = false;
@@ -26,7 +22,7 @@ namespace DVLD_DataAccess
 
             SqlCommand command = new SqlCommand(query, connection);
 
-            command.Parameters.AddWithValue("@LocalDrivingLicenseApplicationID", localDrivingLicenseApplicationID);;
+            command.Parameters.AddWithValue("@LocalDrivingLicenseApplicationID", localDrivingLicenseApplicationID); ;
 
             try
             {
@@ -45,12 +41,12 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 isFound = false;
             }
             finally
             {
-                connection.Close(); 
+                connection.Close();
             }
 
             return isFound;
@@ -79,14 +75,14 @@ namespace DVLD_DataAccess
                 {
                     isFound = true;
                     localDrivingLicenseApplicationID = Convert.ToInt32(reader["LocalDrivingLicenseApplicationID"]);
-                    licenseClassID                   = Convert.ToInt32(reader["LicenseClassID"]);
+                    licenseClassID = Convert.ToInt32(reader["LicenseClassID"]);
                 }
 
                 reader.Close();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 isFound = false;
             }
             finally
@@ -126,7 +122,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
 
                 localDrivingLicenseApplicationID = -1;
             }
@@ -166,7 +162,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 rowsAffected = 0;
             }
             finally
@@ -199,7 +195,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 rowsAffected = 0;
             }
             finally
@@ -235,7 +231,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
             }
             finally
             {
@@ -282,7 +278,7 @@ namespace DVLD_DataAccess
 
             catch (Exception ex)
             {
-                //Console.WriteLine("Error: " + ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
 
             }
 
@@ -332,7 +328,7 @@ namespace DVLD_DataAccess
 
             catch (Exception ex)
             {
-                //Console.WriteLine("Error: " + ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
 
             }
 
@@ -382,7 +378,7 @@ namespace DVLD_DataAccess
 
             catch (Exception ex)
             {
-                //Console.WriteLine("Error: " + ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
 
             }
 
@@ -432,7 +428,7 @@ namespace DVLD_DataAccess
 
             catch (Exception ex)
             {
-                //Console.WriteLine("Error: " + ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
 
             }
 
@@ -474,7 +470,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                //Console.WriteLine(ex.ToString());
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 passedTestsCount = 0;
             }
             finally
@@ -485,6 +481,6 @@ namespace DVLD_DataAccess
             return passedTestsCount;
         }
 
-      
+
     }
 }

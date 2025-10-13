@@ -1,16 +1,17 @@
-﻿using System;
-using System.ComponentModel;
+﻿using DVLD_Shared;
+using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 
 namespace DVLD_DataAccess
 {
     public class clsPersonData
     {
-       
+
         public static bool GetPersonInfoByID(int PersonID, ref string FirstName, ref string SecondName,
           ref string ThirdName, ref string LastName, ref string NationalNo, ref DateTime DateOfBirth,
-           ref short Gender,ref string Address,  ref string Phone, ref string Email,
+           ref short Gender, ref string Address, ref string Phone, ref string Email,
            ref int NationalityCountryID, ref string ImagePath)
         {
             bool isFound = false;
@@ -49,7 +50,7 @@ namespace DVLD_DataAccess
                     LastName = (string)reader["LastName"];
                     NationalNo = (string)reader["NationalNo"];
                     DateOfBirth = (DateTime)reader["DateOfBirth"];
-                    Gender = (byte) reader["Gender"];
+                    Gender = (byte)reader["Gender"];
                     Address = (string)reader["Address"];
                     Phone = (string)reader["Phone"];
 
@@ -87,8 +88,8 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                //Console.WriteLine("Error: " + ex.Message);
-                
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
+
                 isFound = false;
             }
             finally
@@ -101,8 +102,8 @@ namespace DVLD_DataAccess
 
 
         public static bool GetPersonInfoByNationalNo(string NationalNo, ref int PersonID, ref string FirstName, ref string SecondName,
-        ref string ThirdName, ref string LastName,   ref DateTime DateOfBirth,
-         ref short Gender,ref string Address, ref string Phone, ref string Email,
+        ref string ThirdName, ref string LastName, ref DateTime DateOfBirth,
+         ref short Gender, ref string Address, ref string Phone, ref string Email,
          ref int NationalityCountryID, ref string ImagePath)
         {
             bool isFound = false;
@@ -180,7 +181,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                //Console.WriteLine("Error: " + ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 isFound = false;
             }
             finally
@@ -193,10 +194,10 @@ namespace DVLD_DataAccess
 
 
 
-        public static int AddNewPerson( string FirstName,  string SecondName,
-           string ThirdName,  string LastName,  string NationalNo,  DateTime DateOfBirth,
-           short Gender, string Address,  string Phone,  string Email,
-            int NationalityCountryID,  string ImagePath)
+        public static int AddNewPerson(string FirstName, string SecondName,
+           string ThirdName, string LastName, string NationalNo, DateTime DateOfBirth,
+           short Gender, string Address, string Phone, string Email,
+            int NationalityCountryID, string ImagePath)
         {
             //this function will return the new person id if succeeded and -1 if not.
             int PersonID = -1;
@@ -213,7 +214,7 @@ namespace DVLD_DataAccess
 
             command.Parameters.AddWithValue("@FirstName", FirstName);
             command.Parameters.AddWithValue("@SecondName", SecondName);
-           
+
             if (ThirdName != "" && ThirdName != null)
                 command.Parameters.AddWithValue("@ThirdName", ThirdName);
             else
@@ -225,7 +226,7 @@ namespace DVLD_DataAccess
             command.Parameters.AddWithValue("@Gender", Gender);
             command.Parameters.AddWithValue("@Address", Address);
             command.Parameters.AddWithValue("@Phone", Phone);
-            
+
             if (Email != "" && Email != null)
                 command.Parameters.AddWithValue("@Email", Email);
             else
@@ -252,7 +253,7 @@ namespace DVLD_DataAccess
 
             catch (Exception ex)
             {
-                //Console.WriteLine("Error: " + ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
 
             }
 
@@ -266,7 +267,7 @@ namespace DVLD_DataAccess
 
 
 
-        public static bool UpdatePerson(int PersonID,  string FirstName, string SecondName,
+        public static bool UpdatePerson(int PersonID, string FirstName, string SecondName,
            string ThirdName, string LastName, string NationalNo, DateTime DateOfBirth,
            short Gender, string Address, string Phone, string Email,
             int NationalityCountryID, string ImagePath)
@@ -301,7 +302,7 @@ namespace DVLD_DataAccess
             else
                 command.Parameters.AddWithValue("@ThirdName", System.DBNull.Value);
 
-          
+
             command.Parameters.AddWithValue("@LastName", LastName);
             command.Parameters.AddWithValue("@NationalNo", NationalNo);
             command.Parameters.AddWithValue("@DateOfBirth", DateOfBirth);
@@ -330,7 +331,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                //Console.WriteLine("Error: " + ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 return false;
             }
 
@@ -349,7 +350,7 @@ namespace DVLD_DataAccess
             DataTable dt = new DataTable();
             SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
 
-            string query = 
+            string query =
               @"SELECT People.PersonID, People.NationalNo,
               People.FirstName, People.SecondName, People.ThirdName, People.LastName,
 			  People.DateOfBirth, People.Gender,  
@@ -389,7 +390,7 @@ namespace DVLD_DataAccess
 
             catch (Exception ex)
             {
-                // Console.WriteLine("Error: " + ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
             }
             finally
             {
@@ -423,7 +424,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                // Console.WriteLine("Error: " + ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
             }
             finally
             {
@@ -458,7 +459,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                //Console.WriteLine("Error: " + ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 isFound = false;
             }
             finally
@@ -490,7 +491,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                //Console.WriteLine("Error: " + ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 isFound = false;
             }
             finally

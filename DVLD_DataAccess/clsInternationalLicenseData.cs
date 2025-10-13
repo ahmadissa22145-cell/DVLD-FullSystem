@@ -1,6 +1,8 @@
-﻿using System;
+﻿using DVLD_Shared;
+using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 
 namespace DVLD_DataAccess
 {
@@ -43,7 +45,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 isFound = false;
             }
             finally
@@ -79,7 +81,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                // Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
             }
             finally
             {
@@ -124,7 +126,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                // Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
             }
             finally
             {
@@ -177,7 +179,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 internationalLicenseID = -1;
             }
             finally
@@ -224,7 +226,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 rowsAffected = 0;
             }
             finally
@@ -262,7 +264,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 internationalLicenseID = -1;
             }
             finally

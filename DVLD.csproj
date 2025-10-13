@@ -8,10 +8,11 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>DVLD</RootNamespace>
     <AssemblyName>DVLD</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -449,6 +450,7 @@
     <EmbeddedResource Include="Users\frmAddEditUser.resx">
       <DependentUpon>frmAddEditUser.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -793,6 +795,10 @@
     <None Include="Resources\Release Detained License 512.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Shared\DVLD_Shared.csproj">
+      <Project>{daab0c33-6a4c-4080-8961-1455695d610b}</Project>
+      <Name>DVLD_Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="DVLD_Buisness\DVLD Business.csproj">
       <Project>{46a8427b-dcfc-4daf-a14c-e3f4789a993d}</Project>
       <Name>DVLD Business</Name>

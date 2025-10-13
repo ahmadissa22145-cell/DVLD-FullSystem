@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
+﻿using DVLD_Shared;
+using System;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data.SqlClient;
+using System.Diagnostics;
 
 namespace DVLD_DataAccess
 {
@@ -13,53 +11,53 @@ namespace DVLD_DataAccess
         public enum enGendor { Male = 0, Female = 1 };
 
         public static bool GetCountryInfoByID(int ID, ref string CountryName)
+        {
+            bool isFound = false;
+
+            SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
+
+            string query = "SELECT * FROM Countries WHERE CountryID = @CountryID";
+
+            SqlCommand command = new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@CountryID", ID);
+
+            try
             {
-                bool isFound = false;
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
 
-                SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
-
-                string query = "SELECT * FROM Countries WHERE CountryID = @CountryID";
-
-                SqlCommand command = new SqlCommand(query, connection);
-
-                command.Parameters.AddWithValue("@CountryID", ID);
-
-                try
+                if (reader.Read())
                 {
-                    connection.Open();
-                    SqlDataReader reader = command.ExecuteReader();
 
-                    if (reader.Read())
-                    {
+                    // The record was found
+                    isFound = true;
 
-                        // The record was found
-                        isFound = true;
-
-                        CountryName = (string)reader["CountryName"];
-
-                    }
-                    else
-                    {
-                        // The record was not found
-                        isFound = false;
-                    }
-
-                    reader.Close();
-
+                    CountryName = (string)reader["CountryName"];
 
                 }
-                catch (Exception ex)
+                else
                 {
-                    //Console.WriteLine("Error: " + ex.Message);
+                    // The record was not found
                     isFound = false;
                 }
-                finally
-                {
-                    connection.Close();
-                }
 
-                return isFound;
+                reader.Close();
+
+
             }
+            catch (Exception ex)
+            {
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
+                isFound = false;
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return isFound;
+        }
 
         public static bool GetCountryInfoByName(string CountryName, ref int ID)
         {
@@ -99,7 +97,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                //Console.WriteLine("Error: " + ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 isFound = false;
             }
             finally

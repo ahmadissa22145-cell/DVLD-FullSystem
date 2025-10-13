@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using DVLD_Shared;
+using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace DVLD_DataAccess
 {
     public class clsUserData
     {
-
-
         public static bool GetUserInfoByUserID(int userID, ref int personID, ref string username,
                                     ref string password, ref bool isActive)
         {
@@ -46,7 +41,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                // Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
             }
             finally
             {
@@ -77,18 +72,18 @@ namespace DVLD_DataAccess
 
                 if (reader.Read())
                 {
-                    isFound  = true;
-                    userID   = (int)reader["UserID"];
+                    isFound = true;
+                    userID = (int)reader["UserID"];
                     username = (string)reader["Username"];
                     password = (string)reader["Password"];
                     isActive = (bool)reader["IsActive"];
-                    
+
                 }
                 reader.Close();
             }
             catch (Exception ex)
             {
-                // Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
             }
             finally
             {
@@ -97,7 +92,7 @@ namespace DVLD_DataAccess
             return isFound;
         }
 
-        public static bool GetUserInfoByUsernameAndPassword(string username,string password, ref int userID,
+        public static bool GetUserInfoByUsernameAndPassword(string username, string password, ref int userID,
                                                          ref int personID, ref bool isActive)
         {
             bool isFound = false;
@@ -120,17 +115,17 @@ namespace DVLD_DataAccess
 
                 if (reader.Read())
                 {
-                    isFound  = true;
-                    userID   = (int)reader["UserID"];
+                    isFound = true;
+                    userID = (int)reader["UserID"];
                     personID = (int)reader["personID"];
                     isActive = (bool)reader["IsActive"];
-                    
+
                 }
                 reader.Close();
             }
             catch (Exception ex)
             {
-                // Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
             }
             finally
             {
@@ -142,7 +137,7 @@ namespace DVLD_DataAccess
 
         public static int AddNewUser(int personID, string username, string password, bool isActive)
         {
-            int userID = -1; 
+            int userID = -1;
             SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
 
             string query = @"
@@ -167,13 +162,13 @@ namespace DVLD_DataAccess
                 //becuses one filed return 
                 object result = command.ExecuteScalar();
 
-                if(result != null ) 
-                    userID = Convert.ToInt32(result); 
+                if (result != null)
+                    userID = Convert.ToInt32(result);
 
             }
             catch (Exception ex)
             {
-                //  Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 return -1;
             }
             finally
@@ -187,7 +182,7 @@ namespace DVLD_DataAccess
         public static bool UpdateUser(int userID, int personID, string username,
                                       string password, bool isActive)
         {
-            SqlConnection connection = new SqlConnection (clsDataAccessSettings.ConnectionString);
+            SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
 
             string query = @"
                              UPDATE Users
@@ -198,9 +193,9 @@ namespace DVLD_DataAccess
 
                            WHERE UserID   = @UserID";
 
-            SqlCommand command = new SqlCommand(query,connection);
+            SqlCommand command = new SqlCommand(query, connection);
 
-            command.Parameters.AddWithValue("@UserID"  ,   userID);
+            command.Parameters.AddWithValue("@UserID", userID);
             command.Parameters.AddWithValue("@PersonID", personID);
             command.Parameters.AddWithValue("@Username", username);
             command.Parameters.AddWithValue("@Password", password);
@@ -216,7 +211,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                //Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 return false;
             }
             finally
@@ -233,7 +228,7 @@ namespace DVLD_DataAccess
             string query = @"DELETE FROM Users
                              WHERE UserID = @UserID";
 
-            SqlCommand command = new SqlCommand (query,connection);
+            SqlCommand command = new SqlCommand(query, connection);
 
             command.Parameters.AddWithValue("@UserID", userID);
 
@@ -247,7 +242,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-              //  Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 return false;
             }
             finally
@@ -269,7 +264,7 @@ namespace DVLD_DataAccess
                              FROM  Users INNER JOIN
                                     People on Users.PersonID = People.PersonID  ";
 
-            SqlCommand command = new SqlCommand (query,connection);
+            SqlCommand command = new SqlCommand(query, connection);
 
             try
             {
@@ -284,9 +279,9 @@ namespace DVLD_DataAccess
 
                 reader.Close();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                // Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 return dtUsers;
             }
             finally
@@ -319,7 +314,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                // Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 return false;
             }
             finally
@@ -352,7 +347,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                // Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 return false;
             }
             finally
@@ -385,7 +380,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                // Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 return false;
             }
             finally
@@ -422,7 +417,7 @@ namespace DVLD_DataAccess
             catch (Exception ex)
             {
 
-                // Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 return false;
 
             }
@@ -431,7 +426,6 @@ namespace DVLD_DataAccess
                 connection.Close();
             }
         }
-
 
     }
 }

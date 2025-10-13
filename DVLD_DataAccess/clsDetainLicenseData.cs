@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DVLD_Shared;
+using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace DVLD_DataAccess
 {
@@ -13,7 +11,7 @@ namespace DVLD_DataAccess
 
         public static bool GetDetainLicenseInfoByID(int detainID, ref int licenseID, ref DateTime detainDate,
                                                     ref float fineFees, ref int createdByUserID, ref bool isReleased,
-                                                    ref DateTime releaseDate, ref int releasedByUserID,ref int releaseApplicationID)
+                                                    ref DateTime releaseDate, ref int releasedByUserID, ref int releaseApplicationID)
         {
             bool isFound = false;
 
@@ -75,7 +73,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                //Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 isFound = false;
             }
             finally
@@ -150,7 +148,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                //Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 isFound = false;
             }
             finally
@@ -196,7 +194,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                //Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 detainID = -1;
             }
             finally
@@ -237,7 +235,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                //Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 rowsAffected = 0;
             }
             finally
@@ -271,7 +269,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                //Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
             }
             finally
             {
@@ -281,7 +279,7 @@ namespace DVLD_DataAccess
             return dtDetainedLicenses;
         }
 
-        public static bool ReleaseDetainLicense(int detainID,int releasedByUserID,
+        public static bool ReleaseDetainLicense(int detainID, int releasedByUserID,
                                                 int releaseApplicationID)
         {
             int rowsAffected = 0;
@@ -311,7 +309,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                //Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 rowsAffected = 0;
             }
             finally
@@ -346,7 +344,7 @@ namespace DVLD_DataAccess
             }
             catch (Exception ex)
             {
-                //Console.WriteLine(ex.Message);
+                clsLogger.LogIntoEventViewer(clsGlobal.source, ex.Message, EventLogEntryType.Error);
                 isDetained = false;
             }
             finally
