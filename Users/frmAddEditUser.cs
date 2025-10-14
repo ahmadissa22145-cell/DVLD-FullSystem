@@ -131,6 +131,7 @@ namespace DVLD.User
             User.UserName = txtUserName.Text.Trim();   
             User.Password = txtPassword.Text.Trim();
             User.IsActive = chkIsActive.Checked;
+            User.IsPasswordHashed = false;
 
             if (!User.Save())
             {

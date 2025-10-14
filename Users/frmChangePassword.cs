@@ -1,21 +1,17 @@
-﻿using DVLD_Business;
+﻿using DVLD.Global_Classes;
+using DVLD_Buisness;
+using DVLD_Business;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DVLD.User
 {
     public partial class frmChangePassword : Form
     {
-        
 
-        private int _userID  = -1;
+
+        private int _userID = -1;
 
         private clsUser UserInfo { get { return ctrlUserCard1.UserInfo; } }
 
@@ -23,7 +19,7 @@ namespace DVLD.User
         {
             InitializeComponent();
 
-            if(userID < 0)
+            if (userID < 0)
             {
                 MessageBox.Show("Please enter a valid user id and must be positive number", "User ID Invalid", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -52,7 +48,7 @@ namespace DVLD.User
 
             ctrlUserCard1.LoadUserInfo(this, _userID);
 
-            if (!ctrlUserCard1.IsDataLoaded) 
+            if (!ctrlUserCard1.IsDataLoaded)
             {
                 this.Close();
                 return;
@@ -72,15 +68,18 @@ namespace DVLD.User
                 return;
             }
 
-            if(!clsUser.ChangePassword(_userID, newPassword))
+            if (!clsUser.ChangePassword(_userID, newPassword, out string newHashedPassword))
             {
+
                 MessageBox.Show("An error occured : change password process not completed",
-                    "Process Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                     "Process Error",
+                     MessageBoxButtons.OK,
+                     MessageBoxIcon.Error);
                 return;
             }
 
+            clsGlobal.CurrentUserInfo.Password = newHashedPassword;
+            
             MessageBox.Show("Password changed successfully",
                 "Password changed",
                 MessageBoxButtons.OK,
@@ -91,14 +90,16 @@ namespace DVLD.User
         {
             string currentPassword = txtCurrentPassword.Text?.Trim();
 
-            if(currentPassword == string.Empty)
+            if (currentPassword == string.Empty)
             {
                 e.Cancel = true;
                 errorProvider1.SetError(txtCurrentPassword, "this field is requried, please fill it");
                 return;
             }
 
-            if (!UserInfo.Password.Equals(currentPassword))
+            string currentHashPassword = clsHasingData.HashCompute(currentPassword);
+
+            if (!UserInfo.Password.Equals(currentHashPassword))
             {
                 e.Cancel = true;
                 errorProvider1.SetError(txtCurrentPassword, "Current password is incorrect");
@@ -161,7 +162,7 @@ namespace DVLD.User
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            this.AutoValidate = AutoValidate.Disable; 
+            this.AutoValidate = AutoValidate.Disable;
             this.Close();
         }
     }

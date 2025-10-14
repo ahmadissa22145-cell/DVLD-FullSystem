@@ -1,28 +1,24 @@
-﻿using DVLD_DataAccess;
-using System;
-using System.Collections.Generic;
+﻿using DVLD_Buisness;
+using DVLD_DataAccess;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DVLD_Business
 {
     public class clsUser
     {
         public enum enMode { AddNew, Update };
-        
+
         public enMode Mode { get; private set; } = enMode.AddNew;
 
         public int UserID { get; private set; }
 
-        public int PersonID {  get; set; }
+        public int PersonID { get; set; }
 
         private clsPerson _personInfo;
 
-        public clsPerson PersonInfo 
+        public clsPerson PersonInfo
         {
-            get 
+            get
             {
                 // So as not to be called every time for no reason 
                 if (_personInfo == null && PersonID > 0)
@@ -38,7 +34,9 @@ namespace DVLD_Business
 
         public string Password { get; set; }
 
-        public bool IsActive {  get; set; } = true;
+        public bool IsActive { get; set; } = true;
+
+        public bool IsPasswordHashed { get; set; }
 
 
         public clsUser()
@@ -49,7 +47,7 @@ namespace DVLD_Business
             UserName = string.Empty;
             Password = string.Empty;
             IsActive = true;
-
+            IsPasswordHashed = false;
             Mode = enMode.AddNew;
         }
 
@@ -64,6 +62,7 @@ namespace DVLD_Business
             UserName = userName;
             Password = password;
             IsActive = isActive;
+            IsPasswordHashed = true;
 
             Mode = enMode.Update;
         }
@@ -75,7 +74,7 @@ namespace DVLD_Business
             string password = string.Empty;
             bool isActive = false;
 
-            if(clsUserData.GetUserInfoByUserID(userID, ref personID, ref username, ref password, ref isActive))
+            if (clsUserData.GetUserInfoByUserID(userID, ref personID, ref username, ref password, ref isActive))
             {
                 return new clsUser(userID, personID, username, password, isActive);
             }
@@ -90,7 +89,7 @@ namespace DVLD_Business
             string password = string.Empty;
             bool isActive = false;
 
-            if(clsUserData.GetUserInfoByPersonID(personID, ref userID, ref username, ref password, ref isActive))
+            if (clsUserData.GetUserInfoByPersonID(personID, ref userID, ref username, ref password, ref isActive))
             {
                 return new clsUser(userID, personID, username, password, isActive);
             }
@@ -101,12 +100,14 @@ namespace DVLD_Business
         public static clsUser FindByUsernameAndPassword(string username, string password)
         {
             int userID = -1;
-            int personID = -1;  
+            int personID = -1;
             bool isActive = false;
 
-            if(clsUserData.GetUserInfoByUsernameAndPassword(username, password, ref userID, ref personID,  ref isActive))
+            string HashedPassword = clsHasingData.HashCompute(password);
+
+            if (clsUserData.GetUserInfoByUsernameAndPassword(username, HashedPassword, ref userID, ref personID, ref isActive))
             {
-                return new clsUser(userID, personID, username, password, isActive);
+                return new clsUser(userID, personID, username, HashedPassword, isActive);
             }
 
             return null;
@@ -114,20 +115,26 @@ namespace DVLD_Business
 
         private bool _AddNewUser()
         {
-            this.UserID = clsUserData.AddNewUser(this.PersonID, this.UserName, this.Password,
-                                                 this.IsActive);
+            this.UserID = clsUserData.AddNewUser(this.PersonID, this.UserName,
+                                                 this.Password, this.IsActive);
 
             return this.UserID > 0;
         }
 
         private bool _UpdateUser()
         {
+
             return clsUserData.UpdateUser(this.UserID, this.PersonID, this.UserName,
                                           this.Password, this.IsActive);
         }
 
         public bool Save()
         {
+            if (this.Mode == enMode.AddNew || !IsPasswordHashed) 
+            {
+                this.Password = clsHasingData.HashCompute(this.Password);
+            }
+
             switch (this.Mode)
             {
                 case enMode.AddNew:
@@ -154,7 +161,7 @@ namespace DVLD_Business
 
         public static DataTable GetAllUsers()
         {
-            return clsUserData.GetAllUsers();   
+            return clsUserData.GetAllUsers();
         }
 
         public static bool IsUserExist(int userID)
@@ -172,9 +179,11 @@ namespace DVLD_Business
             return clsUserData.DoesPersonHaveUser(personID);
         }
 
-        public static bool ChangePassword(int userID, string newPassword)
+        public static bool ChangePassword(int userID, string newPassword, out string newHashedPassword)
         {
-            return clsUserData.ChangePassword(userID, newPassword); 
+            newHashedPassword = clsHasingData.HashCompute(newPassword);
+
+            return clsUserData.ChangePassword(userID, newHashedPassword);
         }
 
     }
